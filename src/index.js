@@ -6,7 +6,7 @@ import thunk from "redux-thunk";
 import { load, save } from "redux-localstorage-simple";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-import "./app.css";
+
 import reportWebVitals from "./reportWebVitals";
 import RootReducer from "./redux/rootReducer";
 import { tokenMiddleware } from "./middleware";
