@@ -1,25 +1,105 @@
-import logo from './logo.svg';
-import './App.css';
+import { render } from "@testing-library/react";
+import React, { lazy, Suspense, useEffect } from "react";
+import { connect, useDispatch } from "react-redux";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { store } from ".";
+import ClientLayout from "./components/layouts/clientLayout";
+import ScrollTop from "./helpers/scroll-top";
+import { SET_AUTHENTICATED } from "./redux/types";
+import { requests } from "./utils/agent";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import {
+  userProfileFetch,
+  userSetId,
+  userLogout,
+} from "./redux/actions/authAction";
+
+const HideRoute = lazy(() => import("./utils/hideRoute"));
+const PublicRoute = lazy(() => import("./utils/publicRoute"));
+const AuthRoute = lazy(() => import("./utils/authRoute"));
+const Home = lazy(() => import("./pages/home"));
+const Login = lazy(() => import("./pages/login"));
+const Register = lazy(() => import("./pages/register"));
+const Admin = lazy(() => import("./pages/admin"));
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    const token = window.localStorage.getItem("jwtToken");
+    const userId = window.localStorage.getItem("userId");
+    if (token) {
+      console.log(props);
+      store.dispatch({ type: SET_AUTHENTICATED });
+      requests.setToken(token);
+      store.dispatch(userProfileFetch(userId));
+    }
+  }
+
+  componentDidMount() {
+    const userId = window.localStorage.getItem("userId");
+    const { userSetId } = this.props;
+    if (userId) {
+      userSetId(userId);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { userId, userData, userProfileFetch } = this.props;
+    if (prevProps.userId !== userId && userId !== null && userData === null) {
+      userProfileFetch(userId);
+    }
+  }
+
+  render() {
+    return (
+      <Router>
+        <ScrollTop>
+          <Suspense
+            fallback={
+              <div className="gesusers-preloader-wrapper">
+                <div className="gesusers-preloader">
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+            }
+          >
+            <Switch>
+              <PublicRoute
+                exact
+                path="/"
+                component={Home}
+                layout={ClientLayout}
+              />
+              <HideRoute
+                path="/login"
+                component={Login}
+                layout={ClientLayout}
+              />
+              <HideRoute
+                path="/register"
+                component={Register}
+                layout={ClientLayout}
+              />
+
+              <AuthRoute
+                path="/admin"
+                component={Admin}
+                layout={ClientLayout}
+              />
+            </Switch>
+          </Suspense>
+        </ScrollTop>
+      </Router>
+    );
+  }
 }
 
-export default App;
+const mapDispatchToProps = {
+  userProfileFetch,
+  userSetId,
+  userLogout,
+};
+
+export default connect(null, mapDispatchToProps)(App);
