@@ -25,12 +25,16 @@ const Header = () => {
           <Link to="/">Ges Users</Link>
         </div>
         {auth ? (
-          <div className="auth">
-            <Link to="/admin">Mon Compte ({userData?.username}) </Link>
-            <Link to="#" onClick={handleLogout}>
-              Deconnexion
-            </Link>
-          </div>
+          userData === null ? (
+            "...chargement"
+          ) : (
+            <div className="auth">
+              <Link to="/admin">Mon Compte ({userData?.username}) </Link>
+              <Link to="#" onClick={handleLogout}>
+                Deconnexion
+              </Link>
+            </div>
+          )
         ) : (
           <div className="auth">
             <Link to="/login">Connexion</Link>

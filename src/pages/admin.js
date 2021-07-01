@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 
 const Admin = () => {
@@ -11,8 +11,14 @@ const Admin = () => {
         className="home-wrapper"
         style={{ display: "flex", flexDirection: "column" }}
       >
-        <h2>Mon nom: {userData?.username}</h2>
-        <h2>Mon email: {userData?.email}</h2>
+        {userData === null ? (
+          "...chargement"
+        ) : (
+          <Fragment>
+            <h2>Mon nom: {userData.username}</h2>
+            <h2>Mon email: {userData.email}</h2>
+          </Fragment>
+        )}
       </div>
     </div>
   );
