@@ -14,7 +14,7 @@ const AuthRoute = ({
   location,
   ...rest
 }) => {
-  console.log(location.pathname);
+  //console.log(location.pathname);
   return (
     <Route
       {...rest}

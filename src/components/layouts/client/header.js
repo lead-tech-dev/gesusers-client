@@ -17,7 +17,7 @@ const Header = () => {
     dispatch(userLogout());
   };
 
-  console.log(auth);
+  //console.log(auth);
   return (
     <div className="container">
       <div className="header">
