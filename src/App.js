@@ -14,8 +14,6 @@ import {
   userLogout,
 } from "./redux/actions/authAction";
 
-const HideRoute = lazy(() => import("./utils/hideRoute"));
-const PublicRoute = lazy(() => import("./utils/publicRoute"));
 const AuthRoute = lazy(() => import("./utils/authRoute"));
 const Home = lazy(() => import("./pages/home"));
 const Login = lazy(() => import("./pages/login"));
@@ -66,18 +64,18 @@ class App extends React.Component {
             }
           >
             <Switch>
-              <PublicRoute
+              <AuthRoute
                 exact
                 path="/"
                 component={Home}
                 layout={ClientLayout}
               />
-              <HideRoute
+              <AuthRoute
                 path="/login"
                 component={Login}
                 layout={ClientLayout}
               />
-              <HideRoute
+              <AuthRoute
                 path="/register"
                 component={Register}
                 layout={ClientLayout}
@@ -88,6 +86,7 @@ class App extends React.Component {
                 component={Admin}
                 layout={ClientLayout}
               />
+              <AuthRoute layout={ClientLayout} />
             </Switch>
           </Suspense>
         </ScrollTop>
